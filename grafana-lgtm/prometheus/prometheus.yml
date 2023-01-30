@@ -6,6 +6,9 @@ global:
   # external_labels:
   #   monitor: 'codelab-monitor'
 
+remote_write:
+  - url: http://mimir:9009/api/v1/push
+
 # A scrape configuration containing exactly one endpoint to scrape:
 # Here it's Prometheus itself.
 scrape_configs:

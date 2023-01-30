@@ -36,6 +36,15 @@ services:
     volumes:
       - ./loki/loki.yaml:/etc/loki/loki.yaml
 
+  mimir:
+    image: grafana/mimir:2.5.0
+    container_name: lgtm-mimir
+    command: -config.file=/etc/mimir/mimir.yaml
+    ports:
+      - 9009:9009
+    volumes:
+      - ./mimir/mimir.yaml:/etc/mimir/mimir.yaml
+
   website:
     image: nginx:1.23.3-alpine
     container_name: lgtm-website
