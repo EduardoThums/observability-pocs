@@ -1,0 +1,45 @@
+version: '3.7'
+
+services:
+  grafana:
+    image: grafana/grafana-oss:9.3.6
+    container_name: lgtm-grafana
+    ports:
+      - 3000:3000
+    # TODO: config the datasource
+    # volumes:
+    #   ./ /usr/share/grafana/conf/provisioning/datasources
+  
+  promtail:
+    image: grafana/promtail:2.7.2
+    container_name: lgtm-promtail
+    command: -config.file=/etc/promtail/config.yaml
+    volumes:
+      - ./promtail/config.yaml:/etc/promtail/config.yaml
+      - ./logs:/opt/nginx
+
+  prometheus:
+    image: prom/prometheus:v2.41.0
+    container_name: lgtm-prometheus
+    # command:
+    ports:
+      - 9090:9090
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+
+  loki:
+    image: grafana/loki:2.7.2
+    container_name: lgtm-loki
+    command: -config.file=/etc/loki/loki.yaml
+    ports:
+      - 3100:3100
+    volumes:
+      - ./loki/loki.yaml:/etc/loki/loki.yaml
+
+  website:
+    image: nginx:1.23.3-alpine
+    container_name: lgtm-website
+    ports:
+      - 80:80
+    volumes:
+      - ./logs:/var/log/nginx
